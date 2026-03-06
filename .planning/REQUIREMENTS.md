@@ -7,9 +7,9 @@
 
 ### Foundation (CONFIG)
 
-- [ ] **CONFIG-01**: Server validates all 4 required environment variables on startup (BITBUCKET_USERNAME, BITBUCKET_API_TOKEN, BITBUCKET_WORKSPACE, BITBUCKET_REPO_SLUG)
-- [ ] **CONFIG-02**: Server fails gracefully with clear error message if any environment variable is missing
-- [ ] **CONFIG-03**: Server uses HTTPBasicAuth with API Token for Bitbucket authentication
+- [x] **CONFIG-01**: Server validates all 4 required environment variables on startup (BITBUCKET_USERNAME, BITBUCKET_API_TOKEN, BITBUCKET_WORKSPACE, BITBUCKET_REPO_SLUG)
+- [x] **CONFIG-02**: Server fails gracefully with clear error message if any environment variable is missing
+- [x] **CONFIG-03**: Server uses HTTPBasicAuth with API Token for Bitbucket authentication
 - [ ] **CONFIG-04**: Server initializes FastMCP with proper tool registration
 
 ### Read Operations (READ)
@@ -67,9 +67,9 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CONFIG-01 | Phase 1 | Pending |
-| CONFIG-02 | Phase 1 | Pending |
-| CONFIG-03 | Phase 1 | Pending |
+| CONFIG-01 | Phase 1 | Complete |
+| CONFIG-02 | Phase 1 | Complete |
+| CONFIG-03 | Phase 1 | Complete |
 | CONFIG-04 | Phase 1 | Pending |
 | ERROR-03 | Phase 1 | Pending |
 | READ-01 | Phase 2 | Pending |
