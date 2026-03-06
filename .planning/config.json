@@ -1,0 +1,19 @@
+{
+  "mode": "yolo",
+  "granularity": "coarse",
+  "parallelization": true,
+  "commit_docs": true,
+  "model_profile": "custom",
+  "custom_models": {
+    "research": "github-copilot/claude-opus-4.5",
+    "roadmap": "github-copilot/claude-opus-4.5",
+    "default": "kimi-for-coding/k2p5"
+  },
+  "workflow": {
+    "research": true,
+    "plan_check": true,
+    "verifier": true,
+    "nyquist_validation": true,
+    "auto_advance": true
+  }
+}
