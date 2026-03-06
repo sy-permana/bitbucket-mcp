@@ -30,7 +30,9 @@
 3. Bitbucket API client authenticates successfully with HTTPBasicAuth + API Token
 4. All log output goes to stderr (never stdout)
 5. Server responds to MCP protocol initialization without errors
-**Plans:** TBD
+**Plans:** 3 plans in 2 waves
+- Wave 1: 01-01 (config validation), 01-02 (Bitbucket client) - parallel
+- Wave 2: 01-03 (MCP server) - depends on 01-01 and 01-02
 
 ### Phase 2: Read Operations
 **Goal:** Users can query PRs and get contextual information without side effects
@@ -74,7 +76,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/2 | Not started | - |
+| 1. Foundation | 0/3 | Planned | - |
 | 2. Read Operations | 0/2 | Not started | - |
 | 3. PR Lifecycle | 0/2 | Not started | - |
 | 4. Commenting | 0/2 | Not started | - |
