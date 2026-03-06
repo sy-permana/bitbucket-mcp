@@ -10,7 +10,7 @@
 - [x] **CONFIG-01**: Server validates all 4 required environment variables on startup (BITBUCKET_USERNAME, BITBUCKET_API_TOKEN, BITBUCKET_WORKSPACE, BITBUCKET_REPO_SLUG)
 - [x] **CONFIG-02**: Server fails gracefully with clear error message if any environment variable is missing
 - [x] **CONFIG-03**: Server uses HTTPBasicAuth with API Token for Bitbucket authentication
-- [ ] **CONFIG-04**: Server initializes FastMCP with proper tool registration
+- [x] **CONFIG-04**: Server initializes FastMCP with proper tool registration
 
 ### Read Operations (READ)
 
@@ -36,7 +36,7 @@
 
 - [ ] **ERROR-01**: All tool functions return clear string messages (never JSON objects or tracebacks)
 - [ ] **ERROR-02**: Error messages include context (e.g., "Failed to fetch PR #123: Authentication failed")
-- [ ] **ERROR-03**: All logging goes to stderr (never stdout to avoid MCP protocol corruption)
+- [x] **ERROR-03**: All logging goes to stderr (never stdout to avoid MCP protocol corruption)
 
 ## v2 Requirements
 
@@ -70,8 +70,8 @@
 | CONFIG-01 | Phase 1 | Complete |
 | CONFIG-02 | Phase 1 | Complete |
 | CONFIG-03 | Phase 1 | Complete |
-| CONFIG-04 | Phase 1 | Pending |
-| ERROR-03 | Phase 1 | Pending |
+| CONFIG-04 | Phase 1 | Complete |
+| ERROR-03 | Phase 1 | Complete |
 | READ-01 | Phase 2 | Pending |
 | READ-02 | Phase 2 | Pending |
 | READ-03 | Phase 2 | Pending |
