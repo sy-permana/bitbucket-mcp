@@ -178,6 +178,73 @@ def bitbucket_list_pull_requests(state: str | None = None) -> str:
         return _format_error("bitbucket_list_pull_requests", "list PRs", e)
 
 
+def _format_pr_detail(pr: dict) -> str:
+    """Format single PR details as multi-line string.
+
+    Args:
+        pr: PR dictionary from Bitbucket API
+
+    Returns:
+        Formatted string with PR details
+    """
+    pr_id = pr.get('id', 'unknown')
+    title = pr.get('title', 'No title')
+    author = pr.get('author', {}).get('display_name', 'Unknown')
+    state = pr.get('state', 'unknown')
+    source_branch = pr.get('source', {}).get('branch', {}).get('name', 'unknown')
+    target_branch = pr.get('destination', {}).get('branch', {}).get('name', 'unknown')
+    created = pr.get('created_on', 'unknown')
+    updated = pr.get('updated_on', 'unknown')
+    comments = pr.get('comment_count', 0)
+    description = pr.get('description', '')
+
+    lines = [
+        f"PR #{pr_id}: {title}",
+        f"State: {state}",
+        f"Author: {author}",
+        f"Source: {source_branch} → Target: {target_branch}",
+        f"Created: {created}",
+        f"Updated: {updated}",
+        f"Comments: {comments}",
+    ]
+
+    # Add reviewers if present
+    reviewers = pr.get('reviewers', [])
+    if reviewers:
+        reviewer_names = [r.get('display_name', 'Unknown') for r in reviewers]
+        lines.append(f"Reviewers: {', '.join(reviewer_names)}")
+
+    # Add description if present
+    if description:
+        lines.append(f"\nDescription:\n{description}")
+
+    return '\n'.join(lines)
+
+
+@mcp.tool()
+def bitbucket_get_pull_request(pr_id: int) -> str:
+    """Get detailed information about a specific pull request.
+
+    Args:
+        pr_id: Pull request ID number
+
+    Returns:
+        Formatted PR details or error message
+    """
+    try:
+        pr_id_int = int(pr_id)
+        response = bitbucket_client.get(f'/pullrequests/{pr_id_int}')
+        return _format_pr_detail(response)
+
+    except Exception as e:
+        return _format_error(
+            "bitbucket_get_pull_request",
+            f"fetch PR #{pr_id}",
+            e,
+            f"Verify the PR number '{pr_id}' is correct."
+        )
+
+
 if __name__ == "__main__":
     logger.info("Starting Bitbucket PR Manager MCP server...")
     mcp.run(transport="stdio")
