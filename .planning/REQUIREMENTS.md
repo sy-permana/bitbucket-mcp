@@ -16,7 +16,7 @@
 
 - [ ] **READ-01**: User can list pull requests with optional state filter (open/merged/declined)
 - [ ] **READ-02**: User can get detailed information about a specific pull request by ID
-- [ ] **READ-03**: User can fetch PR diff with automatic truncation at 10,000 characters
+- [x] **READ-03**: User can fetch PR diff with automatic truncation at 10,000 characters
 - [ ] **READ-04**: User can check CI/CD commit status for a given commit hash
 
 ### PR Lifecycle (LIFECYCLE)
@@ -34,8 +34,8 @@
 
 ### Error Handling (ERROR)
 
-- [ ] **ERROR-01**: All tool functions return clear string messages (never JSON objects or tracebacks)
-- [ ] **ERROR-02**: Error messages include context (e.g., "Failed to fetch PR #123: Authentication failed")
+- [x] **ERROR-01**: All tool functions return clear string messages (never JSON objects or tracebacks)
+- [x] **ERROR-02**: Error messages include context (e.g., "Failed to fetch PR #123: Authentication failed")
 - [x] **ERROR-03**: All logging goes to stderr (never stdout to avoid MCP protocol corruption)
 
 ## v2 Requirements
@@ -74,10 +74,10 @@
 | ERROR-03 | Phase 1 | Complete |
 | READ-01 | Phase 2 | Pending |
 | READ-02 | Phase 2 | Pending |
-| READ-03 | Phase 2 | Pending |
+| READ-03 | Phase 2 | Complete |
 | READ-04 | Phase 2 | Pending |
-| ERROR-01 | Phase 2 | Pending |
-| ERROR-02 | Phase 2 | Pending |
+| ERROR-01 | Phase 2 | Complete |
+| ERROR-02 | Phase 2 | Complete |
 | LIFECYCLE-01 | Phase 3 | Pending |
 | LIFECYCLE-02 | Phase 3 | Pending |
 | LIFECYCLE-03 | Phase 3 | Pending |

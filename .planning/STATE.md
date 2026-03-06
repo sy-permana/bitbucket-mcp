@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-06T16:03:56.549Z"
+last_updated: "2026-03-06T19:02:19.772Z"
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 6
+  completed_plans: 5
 ---
 
 # STATE: Bitbucket PR Manager MCP Server
@@ -58,6 +58,8 @@ ROADMAP COMPLETE [====] 100%
 | 7 | pytest -p no:logging flag | Prevents pytest logging capture from interfering with stdio protocol tests | 2026-03-06 |
 | 8 | Module-level config validation | Fail-fast on import with sys.exit(1) for clear startup failure | 2026-03-06 |
 - [Phase 01-foundation]: Used typing_extensions.Self for Python 3.10 compatibility — typing.Self is only available in Python 3.11+, project targets 3.10
+- [Phase 02-read-operations]: Breadth-first diff truncation shows complete files before truncating — Ensures AI agents see whole file changes for context, not partial diffs
+- [Phase 02-read-operations]: Diff endpoint uses .text not .json() - critical API pitfall avoided — Bitbucket /diff returns text/plain, calling .json() causes JSONDecodeError
 
 ### Todos
 
