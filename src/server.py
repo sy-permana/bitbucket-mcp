@@ -572,6 +572,38 @@ def bitbucket_approve_pr(pr_id: int) -> str:
         )
 
 
+@mcp.tool()
+def bitbucket_decline_pr(pr_id: int) -> str:
+    """Decline/reject a pull request.
+    
+    Args:
+        pr_id: Pull request ID number
+    
+    Returns:
+        Formatted success message or error
+    """
+    try:
+        # Get current PR state
+        pr = bitbucket_client.get(f'/pullrequests/{pr_id}')
+        state = pr.get('state')
+        
+        if state == 'MERGED':
+            return f"[bitbucket_decline_pr] Failed to decline PR #{pr_id}: PR is already merged (state=MERGED)."
+        if state == 'DECLINED':
+            return f"PR #{pr_id} is already declined."
+        
+        bitbucket_client.post(f'/pullrequests/{pr_id}/decline')
+        return f"PR #{pr_id} declined"
+        
+    except Exception as e:
+        return _format_error(
+            "bitbucket_decline_pr",
+            f"decline PR #{pr_id}",
+            e,
+            {'pr_id': pr_id}
+        )
+
+
 if __name__ == "__main__":
     logger.info("Starting Bitbucket PR Manager MCP server...")
     mcp.run(transport="stdio")
