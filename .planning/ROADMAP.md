@@ -64,8 +64,15 @@ Plan List:
 2. User can merge an open PR (with merge commit or fast-forward options)
 3. User can approve a PR (and approval persists)
 4. User can decline/reject a PR (and state changes to declined)
-5. User can request changes on a PR (via unapprove + comment pattern)
-**Plans:** TBD
+5. User can request changes on a PR (via native request-changes endpoint)
+**Plans:** 3 plans created
+- Wave 1: 03-01 (test scaffold), 03-02 (create_pr tool) - parallel
+- Wave 2: 03-03 (merge, approve, decline, request_changes tools) - depends on 03-02
+
+Plan List:
+- [ ] 03-01-PLAN.md — Test Scaffold for PR Lifecycle Operations
+- [ ] 03-02-PLAN.md — Create PR Tool (LIFECYCLE-01)
+- [ ] 03-03-PLAN.md — State Transition Tools (merge, approve, decline, request changes)
 
 ### Phase 4: Commenting
 **Goal:** Users can provide feedback on PRs via general and inline comments
@@ -86,7 +93,7 @@ Plan List:
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete    | 2026-03-06 |
 | 2. Read Operations | 2/3 | In Progress | 2026-03-06 |
-| 3. PR Lifecycle | 0/2 | Not started | - |
+| 3. PR Lifecycle | 0/3 | Not started | - |
 | 4. Commenting | 0/2 | Not started | - |
 
 ---
