@@ -432,6 +432,53 @@ def bitbucket_check_commit_status(commit_hash: str) -> str:
         )
 
 
+@mcp.tool()
+def bitbucket_create_pr(
+    title: str,
+    source_branch: str,
+    target_branch: str | None = None,
+    description: str | None = None,
+    close_source_branch: bool = False
+) -> str:
+    """Create a new pull request.
+
+    Args:
+        title: Pull request title (required)
+        source_branch: Branch containing changes (required)
+        target_branch: Branch to merge into (optional, defaults to repository default branch)
+        description: Pull request description (optional)
+        close_source_branch: Whether to delete source branch after merge (optional, default False)
+
+    Returns:
+        Formatted success message with PR details and URL
+    """
+    try:
+        data = {
+            "title": title,
+            "source": {"branch": {"name": source_branch}},
+            "close_source_branch": close_source_branch
+        }
+        if target_branch:
+            data["destination"] = {"branch": {"name": target_branch}}
+        if description:
+            data["description"] = description
+
+        response = bitbucket_client.post('/pullrequests', data=data)
+        pr_id = response.get('id')
+        pr_title = response.get('title')
+        source = response.get('source', {}).get('branch', {}).get('name', 'unknown')
+        target = response.get('destination', {}).get('branch', {}).get('name', 'unknown')
+        html_url = response.get('links', {}).get('html', {}).get('href', '')
+
+        return (
+            f"Created PR #{pr_id}: {pr_title}\n"
+            f"Source: {source} → Target: {target}\n"
+            f"URL: {html_url}"
+        )
+    except Exception as e:
+        return _format_error("bitbucket_create_pr", "create PR", e)
+
+
 if __name__ == "__main__":
     logger.info("Starting Bitbucket PR Manager MCP server...")
     mcp.run(transport="stdio")
