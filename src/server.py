@@ -348,12 +348,13 @@ def bitbucket_get_pr_diff(pr_id: int) -> str:
         
         return result
         
-    except requests.exceptions.HTTPError as e:
-        if e.response.status_code == 404:
-            return f"[bitbucket_get_pr_diff] Failed to fetch diff: PR #{pr_id} not found. Verify the PR number."
-        return f"[bitbucket_get_pr_diff] Failed to fetch diff for PR #{pr_id}: HTTP {e.response.status_code}"
     except Exception as e:
-        return f"[bitbucket_get_pr_diff] Failed to fetch diff for PR #{pr_id}: {str(e)}"
+        return _format_error(
+            "bitbucket_get_pr_diff",
+            f"fetch diff for PR #{pr_id}",
+            e,
+            {'pr_id': pr_id, 'resource': 'PR'}
+        )
 
 
 if __name__ == "__main__":
