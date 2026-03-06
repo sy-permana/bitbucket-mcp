@@ -17,7 +17,7 @@
 - [x] **READ-01**: User can list pull requests with optional state filter (open/merged/declined)
 - [x] **READ-02**: User can get detailed information about a specific pull request by ID
 - [x] **READ-03**: User can fetch PR diff with automatic truncation at 10,000 characters
-- [ ] **READ-04**: User can check CI/CD commit status for a given commit hash
+- [x] **READ-04**: User can check CI/CD commit status for a given commit hash
 
 ### PR Lifecycle (LIFECYCLE)
 
@@ -75,7 +75,7 @@
 | READ-01 | Phase 2 | Complete |
 | READ-02 | Phase 2 | Complete |
 | READ-03 | Phase 2 | Complete |
-| READ-04 | Phase 2 | Pending |
+| READ-04 | Phase 2 | Complete |
 | ERROR-01 | Phase 2 | Complete |
 | ERROR-02 | Phase 2 | Complete |
 | LIFECYCLE-01 | Phase 3 | Pending |
