@@ -357,6 +357,81 @@ def bitbucket_get_pr_diff(pr_id: int) -> str:
         )
 
 
+def _format_commit_statuses(commit_hash: str, statuses: list[dict]) -> str:
+    """Format commit CI/CD statuses as readable string.
+
+    Args:
+        commit_hash: The commit hash (shortened for display)
+        statuses: List of status dictionaries from Bitbucket API
+
+    Returns:
+        Formatted string with state indicators and details
+    """
+    # State to emoji/indicator mapping
+    state_indicators = {
+        'SUCCESSFUL': '✓',
+        'FAILED': '✗',
+        'INPROGRESS': '○',
+        'STOPPED': '−'
+    }
+
+    short_hash = commit_hash[:12] if len(commit_hash) > 12 else commit_hash
+
+    lines = [f"CI/CD Statuses for commit {short_hash}:", ""]
+
+    for status in statuses:
+        state = status.get('state', 'UNKNOWN')
+        name = status.get('name', 'Unknown Build')
+        description = status.get('description', '')
+        url = status.get('url', '')
+        updated = status.get('updated_on', '')
+
+        indicator = state_indicators.get(state, '?')
+
+        lines.append(f"{indicator} {name}")
+        lines.append(f"  State: {state}")
+
+        if description:
+            lines.append(f"  Description: {description}")
+        if url:
+            lines.append(f"  URL: {url}")
+        if updated:
+            lines.append(f"  Updated: {updated}")
+
+        lines.append("")  # Blank line between statuses
+
+    return '\n'.join(lines)
+
+
+@mcp.tool()
+def bitbucket_check_commit_status(commit_hash: str) -> str:
+    """Check CI/CD commit status for a given commit hash.
+
+    Args:
+        commit_hash: Full or partial commit hash (e.g., 'abc123' or full 40-char)
+
+    Returns:
+        Formatted list of build statuses or message if none found
+    """
+    try:
+        response = bitbucket_client.get(f'/commit/{commit_hash}/statuses')
+        statuses = response.get('values', [])
+
+        if not statuses:
+            short_hash = commit_hash[:12] if len(commit_hash) > 12 else commit_hash
+            return f"No CI/CD statuses found for commit {short_hash}."
+
+        return _format_commit_statuses(commit_hash, statuses)
+
+    except Exception as e:
+        return _format_error(
+            "bitbucket_check_commit_status",
+            f"check status for commit {commit_hash[:12] if len(commit_hash) > 12 else commit_hash}",
+            e,
+            {'commit_hash': commit_hash[:12] if len(commit_hash) > 12 else commit_hash, 'resource': 'Commit'}
+        )
+
+
 if __name__ == "__main__":
     logger.info("Starting Bitbucket PR Manager MCP server...")
     mcp.run(transport="stdio")

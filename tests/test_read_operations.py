@@ -484,3 +484,144 @@ class TestGetPRDiff:
         assert '[bitbucket_get_pr_diff]' in result
         assert '123' in result
         assert 'Connection timeout' in result
+
+
+class TestCheckCommitStatus:
+    """Tests for bitbucket_check_commit_status tool."""
+
+    @responses.activate
+    def test_check_commit_status_success(self, mock_env_vars):
+        """Test check_commit_status returns formatted status list."""
+        responses.add(
+            responses.GET,
+            "https://api.bitbucket.org/2.0/repositories/test-workspace/test-repo/commit/abc123def456/statuses",
+            json={
+                "values": [
+                    {
+                        "key": "build-1",
+                        "name": "Unit Tests",
+                        "state": "SUCCESSFUL",
+                        "description": "42 tests passed",
+                        "url": "https://ci.example.com/build/123",
+                        "created_on": "2026-03-07T10:00:00Z",
+                        "updated_on": "2026-03-07T10:05:00Z"
+                    },
+                    {
+                        "key": "build-2",
+                        "name": "Integration Tests",
+                        "state": "INPROGRESS",
+                        "description": "Running...",
+                        "url": "https://ci.example.com/build/124",
+                        "created_on": "2026-03-07T10:00:00Z",
+                        "updated_on": "2026-03-07T10:02:00Z"
+                    }
+                ]
+            },
+            status=200
+        )
+
+        from src.server import bitbucket_check_commit_status
+
+        result = bitbucket_check_commit_status("abc123def456")
+
+        # Should be a string
+        assert isinstance(result, str)
+        # Should contain commit hash
+        assert "abc123def456" in result
+        # Should contain state indicators
+        assert "✓" in result  # SUCCESSFUL
+        assert "○" in result  # INPROGRESS
+        # Should contain build names
+        assert "Unit Tests" in result
+        assert "Integration Tests" in result
+        # Should contain state labels
+        assert "State: SUCCESSFUL" in result
+        assert "State: INPROGRESS" in result
+
+    @responses.activate
+    def test_commit_no_statuses(self, mock_env_vars):
+        """Test check_commit_status returns message when no statuses found."""
+        responses.add(
+            responses.GET,
+            "https://api.bitbucket.org/2.0/repositories/test-workspace/test-repo/commit/abc123/statuses",
+            json={"values": []},
+            status=200
+        )
+
+        from src.server import bitbucket_check_commit_status
+
+        result = bitbucket_check_commit_status("abc123")
+
+        # Should be a string
+        assert isinstance(result, str)
+        # Should indicate no statuses found
+        assert "No CI/CD statuses found" in result
+        assert "abc123" in result
+
+    @responses.activate
+    def test_commit_status_error_handling(self, mock_env_vars):
+        """Test check_commit_status returns error message on API failure."""
+        responses.add(
+            responses.GET,
+            "https://api.bitbucket.org/2.0/repositories/test-workspace/test-repo/commit/badcommit/statuses",
+            json={"error": "Not found"},
+            status=404
+        )
+
+        from src.server import bitbucket_check_commit_status
+
+        result = bitbucket_check_commit_status("badcommit")
+
+        # Should return error string
+        assert isinstance(result, str)
+        # Should contain tool name or error indicator
+        assert "bitbucket_check_commit_status" in result or "Failed" in result
+        # Should mention the commit
+        assert "badcommit" in result
+
+    def test_format_commit_statuses_helper(self, mock_env_vars):
+        """Test _format_commit_statuses helper function directly."""
+        from src.server import _format_commit_statuses
+
+        statuses = [
+            {
+                "key": "build-1",
+                "name": "Test Build",
+                "state": "SUCCESSFUL",
+                "description": "All good",
+                "url": "https://example.com",
+                "updated_on": "2026-03-07T10:00:00Z"
+            },
+            {
+                "key": "build-2",
+                "name": "Failed Build",
+                "state": "FAILED",
+                "description": "Tests failed",
+                "url": "https://example.com/fail",
+                "updated_on": "2026-03-07T10:01:00Z"
+            },
+            {
+                "key": "build-3",
+                "name": "Stopped Build",
+                "state": "STOPPED",
+                "updated_on": "2026-03-07T10:02:00Z"
+            }
+        ]
+
+        result = _format_commit_statuses("abc123def456789", statuses)
+
+        # Should contain commit hash (shortened)
+        assert "abc123def456" in result
+        # Should have all state indicators
+        assert "✓" in result  # SUCCESSFUL
+        assert "✗" in result  # FAILED
+        assert "−" in result  # STOPPED
+        # Should have build names
+        assert "Test Build" in result
+        assert "Failed Build" in result
+        assert "Stopped Build" in result
+        # Should have descriptions
+        assert "All good" in result
+        assert "Tests failed" in result
+        # Should have URLs
+        assert "https://example.com" in result
