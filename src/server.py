@@ -80,37 +80,78 @@ def _truncate_diff(diff_text: str, max_chars: int = 10000) -> str:
 mcp = FastMCP("bitbucket-pr-manager")
 
 
-def _format_error(tool_name: str, action: str, error: Exception, context: str = "") -> str:
+def _format_error(
+    tool_name: str,
+    action: str,
+    error: Exception,
+    context: dict | None = None
+) -> str:
     """Format error message with context and suggestions.
-    
+
     Format: "[tool_name] Failed to X: reason" + context + suggestion
-    
+
     Args:
-        tool_name: Name of the tool that failed
-        action: Description of the action that failed
+        tool_name: Name of the MCP tool
+        action: Description of what was being attempted (e.g., "fetch PR #123")
         error: The exception that occurred
-        context: Additional context (e.g., PR ID)
-        
+        context: Optional dict with additional context for error message
+
     Returns:
-        Formatted error string
+        Formatted error string with helpful suggestions
     """
     import requests
-    
+
+    # Build context string from dict
+    ctx_str = ""
+    if context:
+        ctx_str = " " + " ".join(f"{k}={v}" for k, v in context.items())
+
     if isinstance(error, requests.exceptions.HTTPError):
         status_code = error.response.status_code
+
         if status_code == 401:
-            return f"[{tool_name}] Failed to {action}: Authentication failed. Check your BITBUCKET_API_TOKEN."
+            return (
+                f"[{tool_name}] Failed to {action}: Authentication failed.{ctx_str} "
+                "Check your BITBUCKET_API_TOKEN and BITBUCKET_USERNAME are correct."
+            )
         elif status_code == 403:
-            return f"[{tool_name}] Failed to {action}: Access forbidden. Check your permissions."
+            return (
+                f"[{tool_name}] Failed to {action}: Permission denied.{ctx_str} "
+                "Ensure your API token has access to this repository."
+            )
         elif status_code == 404:
-            ctx = f" {context}" if context else ""
-            return f"[{tool_name}] Failed to {action}: Not found.{ctx} Verify the value is correct."
+            resource = context.get('resource', 'Resource') if context else 'Resource'
+            return (
+                f"[{tool_name}] Failed to {action}: {resource} not found.{ctx_str} "
+                "Verify the ID/identifier is correct."
+            )
+        elif status_code == 429:
+            return (
+                f"[{tool_name}] Failed to {action}: Rate limited.{ctx_str} "
+                "Wait a moment and try again."
+            )
         elif status_code >= 500:
-            return f"[{tool_name}] Failed to {action}: Bitbucket server error ({status_code}). Try again later."
+            return (
+                f"[{tool_name}] Failed to {action}: Bitbucket server error (HTTP {status_code}).{ctx_str} "
+                "This is a temporary issue. Please retry in a moment."
+            )
         else:
-            return f"[{tool_name}] Failed to {action}: HTTP {status_code}"
-    
-    return f"[{tool_name}] Failed to {action}: {str(error)}"
+            return f"[{tool_name}] Failed to {action}: HTTP {status_code}.{ctx_str}"
+
+    elif isinstance(error, requests.exceptions.ConnectionError):
+        return (
+            f"[{tool_name}] Failed to {action}: Connection error.{ctx_str} "
+            "Check your internet connection and try again."
+        )
+
+    elif isinstance(error, requests.exceptions.Timeout):
+        return (
+            f"[{tool_name}] Failed to {action}: Request timed out.{ctx_str} "
+            "Bitbucket may be slow. Please retry."
+        )
+
+    else:
+        return f"[{tool_name}] Failed to {action}: {str(error)}{ctx_str}"
 
 
 def _format_pr_list(prs: list[dict]) -> str:
@@ -241,7 +282,7 @@ def bitbucket_get_pull_request(pr_id: int) -> str:
             "bitbucket_get_pull_request",
             f"fetch PR #{pr_id}",
             e,
-            f"Verify the PR number '{pr_id}' is correct."
+            {'pr_id': pr_id, 'resource': 'PR'}
         )
 
 
