@@ -12,7 +12,7 @@
 ## Phases
 
 - [x] **Phase 1: Foundation** - Server initialization, auth, and client layer (completed 2026-03-06)
-- [ ] **Phase 2: Read Operations** - List PRs, get details, fetch diffs, check status
+- [~] **Phase 2: Read Operations** - List PRs, get details, fetch diffs, check status (in progress)
 - [ ] **Phase 3: PR Lifecycle** - Create, merge, approve, decline, request changes
 - [ ] **Phase 4: Commenting** - General and inline PR comments
 
@@ -51,8 +51,8 @@
 - Wave 2: 02-03 (check_commit_status, error formatting) - depends on 02-01, 02-02
 
 Plan List:
-- [ ] 02-01-PLAN.md — Core PR Read Tools (list_prs, get_pr_details) + test scaffold
-- [ ] 02-02-PLAN.md — PR Diff Tool (get_pr_diff with 10k truncation)
+- [x] 02-01-PLAN.md — Core PR Read Tools (list_prs, get_pr_details) + test scaffold
+- [x] 02-02-PLAN.md — PR Diff Tool (get_pr_diff with 10k truncation)
 - [ ] 02-03-PLAN.md — Commit Status + Error Formatting Utility
 
 ### Phase 3: PR Lifecycle
@@ -85,7 +85,7 @@ Plan List:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete    | 2026-03-06 |
-| 2. Read Operations | 0/3 | Planned     | - |
+| 2. Read Operations | 2/3 | In Progress | 2026-03-06 |
 | 3. PR Lifecycle | 0/2 | Not started | - |
 | 4. Commenting | 0/2 | Not started | - |
 

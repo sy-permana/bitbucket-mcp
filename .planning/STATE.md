@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-03-06T19:02:19.772Z"
+status: active
+last_updated: "2026-03-06T19:02:00.000Z"
 progress:
   total_phases: 4
   completed_phases: 1
@@ -19,26 +19,30 @@ progress:
 |-----------|-------|
 | **Project** | Bitbucket PR Manager MCP Server |
 | **Core Value** | AI agents can perform complete PR workflows (open, review, comment, approve, merge) without human intervention |
-| **Current Focus** | Phase 1: Foundation |
-| **Status** | Roadmap created, awaiting planning |
+| **Current Focus** | Phase 2: Read Operations |
+| **Status** | Phase 2 in progress - Plan 01 complete |
 
 ## Current Position
 
 | Attribute | Value |
 |-----------|-------|
-| **Phase** | 01-foundation |
-| **Plan** | 03 |
-| **Status** | Complete - All 3 plans finished, ready for Phase 2 |
+| **Phase** | 02-read-operations |
+| **Plan** | 01 |
+| **Status** | Complete - Core PR read tools implemented |
+| **Next Plan** | 02-02 (diff operations) |
 
 ### Progress
 
 ```
-ROADMAP COMPLETE [====] 100%
+ROADMAP COMPLETE [████████░░] 83%
   Phase 1: Foundation ──────────── [3/3] Complete
     Plan 01: Configuration ─────── Complete
     Plan 02: Bitbucket Client ──── Complete
     Plan 03: MCP Server ────────── Complete
-  Phase 2: Read Operations ─────── Not started
+  Phase 2: Read Operations ─────── [1/3] In Progress
+    Plan 01: Core PR Read Tools ── Complete
+    Plan 02: Diff Operations ───── Not started
+    Plan 03: Commit Status ─────── Not started
   Phase 3: PR Lifecycle ────────── Not started
   Phase 4: Commenting ──────────── Not started
 ```
@@ -57,16 +61,17 @@ ROADMAP COMPLETE [====] 100%
 | 6 | Logging configured BEFORE other imports | Ensures all logs (including from imported modules) go to stderr, preventing stdio corruption | 2026-03-06 |
 | 7 | pytest -p no:logging flag | Prevents pytest logging capture from interfering with stdio protocol tests | 2026-03-06 |
 | 8 | Module-level config validation | Fail-fast on import with sys.exit(1) for clear startup failure | 2026-03-06 |
-- [Phase 01-foundation]: Used typing_extensions.Self for Python 3.10 compatibility — typing.Self is only available in Python 3.11+, project targets 3.10
-- [Phase 02-read-operations]: Breadth-first diff truncation shows complete files before truncating — Ensures AI agents see whole file changes for context, not partial diffs
-- [Phase 02-read-operations]: Diff endpoint uses .text not .json() - critical API pitfall avoided — Bitbucket /diff returns text/plain, calling .json() causes JSONDecodeError
+| 9 | State parameter normalization | Accept lowercase ('open', 'merged', 'declined') from users, convert to API uppercase | 2026-03-06 |
+| 10 | Multi-line PR formatting with labeled fields | More readable than single-line format; shows all key info at glance | 2026-03-06 |
 
 ### Todos
 
 - [x] Plan 01-01: Configuration Validation (Complete)
 - [x] Plan 01-02: Bitbucket API Client (Complete)
 - [x] Plan 01-03: MCP Server Initialization (Complete)
-- [ ] Plan Phase 2: Read Operations (Next)
+- [x] Plan 02-01: Core PR Read Tools (Complete)
+- [ ] Plan 02-02: Diff Operations (Next)
+- [ ] Plan 02-03: Commit Status
 - [ ] Plan Phase 3: PR Lifecycle
 - [ ] Plan Phase 4: Commenting
 
@@ -76,9 +81,9 @@ None
 
 ## Session Continuity
 
-**Last Action:** Completed Plan 01-03: MCP Server Initialization
-**Next Action:** Plan Phase 2: Read Operations
-**Context Valid:** Yes — Foundation complete: Config (01-01), Client (01-02), Server (01-03) all ready
+**Last Action:** Completed Plan 02-01: Core PR Read Tools
+**Next Action:** Plan 02-02: Diff Operations
+**Context Valid:** Yes — Read tools ready: list_prs and get_pr implemented with tests
 
 ## Key Constraints (From PROJECT.md)
 
