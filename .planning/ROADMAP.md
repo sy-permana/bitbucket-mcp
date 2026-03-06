@@ -45,7 +45,15 @@
 4. User can check CI/CD commit status for any commit hash
 5. All tool errors return clear string messages (never JSON objects or tracebacks)
 6. Error messages include context (e.g., "Failed to fetch PR #123: Not found")
-**Plans:** TBD
+**Plans:** 3 plans created
+- Wave 1: 02-01 (list_prs, get_pr + Wave 0 test scaffold) - independent
+- Wave 1: 02-02 (get_pr_diff) - depends on 02-01
+- Wave 2: 02-03 (check_commit_status, error formatting) - depends on 02-01, 02-02
+
+Plan List:
+- [ ] 02-01-PLAN.md — Core PR Read Tools (list_prs, get_pr_details) + test scaffold
+- [ ] 02-02-PLAN.md — PR Diff Tool (get_pr_diff with 10k truncation)
+- [ ] 02-03-PLAN.md — Commit Status + Error Formatting Utility
 
 ### Phase 3: PR Lifecycle
 **Goal:** Users can manage complete PR workflows from creation to merge
@@ -76,8 +84,8 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/3 | Complete    | 2026-03-06 |
-| 2. Read Operations | 0/2 | Not started | - |
+| 1. Foundation | 3/3 | Complete    | 2026-03-06 |
+| 2. Read Operations | 0/3 | Planned     | - |
 | 3. PR Lifecycle | 0/2 | Not started | - |
 | 4. Commenting | 0/2 | Not started | - |
 
