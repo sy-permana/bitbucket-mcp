@@ -604,6 +604,54 @@ def bitbucket_decline_pr(pr_id: int) -> str:
         )
 
 
+@mcp.tool()
+def bitbucket_request_changes(pr_id: int, comment: str | None = None) -> str:
+    """Request changes on a pull request.
+    
+    Uses native Bitbucket request-changes endpoint. Optionally adds an explanatory comment.
+    
+    Args:
+        pr_id: Pull request ID number
+        comment: Optional explanatory comment to add with the request
+    
+    Returns:
+        Formatted success message or error
+    """
+    try:
+        # Get current PR state
+        pr = bitbucket_client.get(f'/pullrequests/{pr_id}')
+        state = pr.get('state')
+        
+        if state == 'MERGED':
+            return f"[bitbucket_request_changes] Failed to request changes on PR #{pr_id}: PR is already merged (state=MERGED)."
+        if state == 'DECLINED':
+            return f"[bitbucket_request_changes] Failed to request changes on PR #{pr_id}: PR is already declined (state=DECLINED)."
+        
+        # Request changes via native endpoint
+        bitbucket_client.post(f'/pullrequests/{pr_id}/request-changes')
+        
+        # Optionally add explanatory comment
+        if comment:
+            try:
+                bitbucket_client.post(
+                    f'/pullrequests/{pr_id}/comments',
+                    data={'content': {'raw': comment}}
+                )
+            except Exception:
+                # Comment failure shouldn't fail the request-changes
+                pass
+        
+        return f"Requested changes on PR #{pr_id}"
+        
+    except Exception as e:
+        return _format_error(
+            "bitbucket_request_changes",
+            f"request changes on PR #{pr_id}",
+            e,
+            {'pr_id': pr_id}
+        )
+
+
 if __name__ == "__main__":
     logger.info("Starting Bitbucket PR Manager MCP server...")
     mcp.run(transport="stdio")
