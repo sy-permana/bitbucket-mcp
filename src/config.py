@@ -1,9 +1,10 @@
 """Configuration module for Bitbucket PR Manager MCP Server."""
 
 import os
-from typing import Self
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, Field
+from typing_extensions import Self
 
 
 class BitbucketConfig(BaseModel):
