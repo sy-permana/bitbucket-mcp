@@ -479,6 +479,61 @@ def bitbucket_create_pr(
         return _format_error("bitbucket_create_pr", "create PR", e)
 
 
+@mcp.tool()
+def bitbucket_merge_pr(
+    pr_id: int,
+    strategy: str = "merge_commit",
+    close_source_branch: bool = False,
+    message: str | None = None
+) -> str:
+    """Merge an open pull request.
+    
+    Args:
+        pr_id: Pull request ID number
+        strategy: Merge strategy - 'merge_commit' (default), 'fast_forward', or 'squash'
+        close_source_branch: Whether to delete source branch after merge (default False)
+        message: Custom merge commit message (optional)
+    
+    Returns:
+        Formatted success message with merged PR details
+    """
+    try:
+        # Get PR details for state validation and branch info
+        pr = bitbucket_client.get(f'/pullrequests/{pr_id}')
+        state = pr.get('state')
+        
+        if state == 'MERGED':
+            return f"[bitbucket_merge_pr] Failed to merge PR #{pr_id}: PR is already merged (state=MERGED)."
+        if state == 'DECLINED':
+            return f"[bitbucket_merge_pr] Failed to merge PR #{pr_id}: PR is declined (state=DECLINED)."
+        
+        source = pr.get('source', {}).get('branch', {}).get('name', 'unknown')
+        target = pr.get('destination', {}).get('branch', {}).get('name', 'unknown')
+        pr_title = pr.get('title', 'No title')
+        
+        data = {
+            "type": "string",
+            "merge_strategy": strategy,
+            "close_source_branch": close_source_branch
+        }
+        if message:
+            data["message"] = message
+            
+        bitbucket_client.post(f'/pullrequests/{pr_id}/merge', data=data)
+        
+        return (
+            f"Successfully merged PR #{pr_id}: {pr_title}\n"
+            f"{source} → {target}"
+        )
+    except Exception as e:
+        return _format_error(
+            "bitbucket_merge_pr", 
+            f"merge PR #{pr_id}", 
+            e,
+            {'pr_id': pr_id}
+        )
+
+
 if __name__ == "__main__":
     logger.info("Starting Bitbucket PR Manager MCP server...")
     mcp.run(transport="stdio")
