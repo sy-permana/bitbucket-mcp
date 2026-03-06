@@ -12,14 +12,13 @@ AI agents can perform complete PR workflows (open, review, comment, approve, mer
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Authentication & Environment: HTTPBasicAuth with API Token, strict 4-variable env validation, stderr-only logging — Phase 1
 
 ### Active
 
 - [ ] PR Lifecycle Management: open, merge, approve, decline PRs
 - [ ] Context Fetching: get diff with context window protection, check commit status
 - [ ] Commenting: general PR comments and inline line-specific comments
-- [ ] Authentication & Environment: HTTPBasicAuth with API Token, strict env var validation
 - [ ] Return Format: All tools return clear string messages (success/failure)
 
 ### Out of Scope
@@ -56,10 +55,12 @@ AI agents can perform complete PR workflows (open, review, comment, approve, mer
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| API Token over App Password | User explicitly specified API Token | — Pending |
-| String return format | User requirement for clear success/failure messages | — Pending |
-| Diff truncation at 10k chars | Protect LLM context window as specified | — Pending |
-| Live API docs fetch | Ensure accurate payload structures | — Pending |
+| API Token over App Password | User explicitly specified API Token | ✓ Validated — Phase 1 |
+| String return format | User requirement for clear success/failure messages | — In Progress |
+| Diff truncation at 10k chars | Protect LLM context window as specified | — In Progress |
+| Live API docs fetch | Ensure accurate payload structures | — In Progress |
+| stderr-only logging | Prevent stdio protocol corruption | ✓ Validated — Phase 1 |
+| Pydantic config validation | Type-safe environment handling | ✓ Validated — Phase 1 |
 
 ---
-*Last updated: 2025-03-06 after initialization*
+*Last updated: 2026-03-06 after Phase 1 complete*
