@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-03-06T19:11:57.871Z"
+status: in-progress
+last_updated: "2026-03-06T22:06:00Z"
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 9
+  completed_plans: 7
 ---
 
 # STATE: Bitbucket PR Manager MCP Server
@@ -19,22 +19,22 @@ progress:
 |-----------|-------|
 | **Project** | Bitbucket PR Manager MCP Server |
 | **Core Value** | AI agents can perform complete PR workflows (open, review, comment, approve, merge) without human intervention |
-| **Current Focus** | Phase 2: Read Operations |
-| **Status** | Phase 2 Complete - All read operations with error handling |
+| **Current Focus** | Phase 3: PR Lifecycle |
+| **Status** | Phase 3 In Progress - Create PR tool complete |
 
 ## Current Position
 
 | Attribute | Value |
 |-----------|-------|
-| **Phase** | 02-read-operations |
-| **Plan** | 03 |
-| **Status** | Complete - All read operations with error handling implemented |
-| **Next Plan** | Transition to Phase 3: PR Lifecycle |
+| **Phase** | 03-pr-lifecycle |
+| **Plan** | 02 |
+| **Status** | Complete - Create PR tool with tiered response format |
+| **Next Plan** | Plan 03-03: Merge, Approve, Decline operations |
 
 ### Progress
 
 ```
-ROADMAP COMPLETE [██████████] 100%
+ROADMAP IN PROGRESS [████████░░] 70%
   Phase 1: Foundation ──────────── [3/3] Complete
     Plan 01: Configuration ─────── Complete
     Plan 02: Bitbucket Client ──── Complete
@@ -43,7 +43,10 @@ ROADMAP COMPLETE [██████████] 100%
     Plan 01: Core PR Read Tools ── Complete
     Plan 02: Diff Operations ───── Complete
     Plan 03: Commit Status ─────── Complete
-  Phase 3: PR Lifecycle ────────── Not started
+  Phase 3: PR Lifecycle ────────── [1/3] In Progress
+    Plan 01: Test Infrastructure ─ Complete
+    Plan 02: Create PR Tool ─────── Complete
+    Plan 03: Merge/Approve/Decline ─ Not Started
   Phase 4: Commenting ──────────── Not started
 ```
 
@@ -63,8 +66,11 @@ ROADMAP COMPLETE [██████████] 100%
 | 8 | Module-level config validation | Fail-fast on import with sys.exit(1) for clear startup failure | 2026-03-06 |
 | 9 | State parameter normalization | Accept lowercase ('open', 'merged', 'declined') from users, convert to API uppercase | 2026-03-06 |
 | 10 | Multi-line PR formatting with labeled fields | More readable than single-line format; shows all key info at glance | 2026-03-06 |
+| 11 | Tiered success response format | Create PR: Summary + URL; Merge: Confirmation + branches; Approve/Decline: Confirmation only | 2026-03-06 |
+| 12 | close_source_branch defaults to False | Prevents accidental branch deletion on merge | 2026-03-06 |
 - [Phase 02-read-operations]: Used dict context for error formatting instead of string — Dict context provides key=value pairs for flexible error message construction, enabling richer context in error messages
 - [Phase 02-read-operations]: State indicators use Unicode symbols for CI/CD status — Unicode symbols (✓ ✗ ○ −) provide quick visual scanning in LLM context windows and are universally recognized
+- [Phase 03-pr-lifecycle]: Tiered response format balances information density — Create operations need URL for viewing; approve/decline are quick actions with simple confirmation
 
 ### Todos
 
@@ -74,7 +80,9 @@ ROADMAP COMPLETE [██████████] 100%
 - [x] Plan 02-01: Core PR Read Tools (Complete)
 - [x] Plan 02-02: Diff Operations (Complete)
 - [x] Plan 02-03: Commit Status (Complete)
-- [ ] Plan Phase 3: PR Lifecycle (Next)
+- [x] Plan 03-01: Test Infrastructure (Complete)
+- [x] Plan 03-02: Create PR Tool (Complete)
+- [ ] Plan 03-03: Merge/Approve/Decline (Next)
 - [ ] Plan Phase 4: Commenting
 
 ### Blockers
@@ -83,9 +91,9 @@ None
 
 ## Session Continuity
 
-**Last Action:** Completed Plan 02-03: Commit Status & Error Handling
-**Next Action:** Transition to Phase 3: PR Lifecycle
-**Context Valid:** Yes — All read operations complete with consistent error handling
+**Last Action:** Completed Plan 03-02: Create PR Tool
+**Next Action:** Execute Plan 03-03: Merge, Approve, Decline operations
+**Context Valid:** Yes — PR creation complete with tiered response format
 
 ## Key Constraints (From PROJECT.md)
 
@@ -102,7 +110,13 @@ None
 3. **Raw Exceptions** — Never return tracebacks to LLM
 4. **Inline Comment Complexity** — Requires careful `to`/`from` line mapping
 
+## Performance Metrics
+
+| Phase | Plan | Duration | Tasks | Files |
+|-------|------|----------|-------|-------|
+| 03-pr-lifecycle | 02 | 8min | 1 | 2 |
+
 ---
 
-*State file initialized: 2025-03-06*
-*Update this file as the project progresses*
+*State file updated: 2026-03-06*
+*Plan 03-02 completed*
