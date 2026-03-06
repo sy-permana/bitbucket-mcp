@@ -401,24 +401,22 @@ class TestGetPRDiff:
         from src.server import bitbucket_get_pr_diff
         
         # Mock PR details
-        mock_pr = {
-            'id': 456,
-            'title': 'Large PR',
-            'author': {'display_name': 'Developer'},
-            'state': 'OPEN',
-            'source': {'branch': {'name': 'develop'}},
-            'destination': {'branch': {'name': 'main'}}
-        }
-        
-        # Mock large diff response (>10k chars)
-        large_diff = 'diff --git a/large.py b/large.py\n' + '\n'.join([f'+line {i}' for i in range(500)])
-        
         responses.add(
             responses.GET,
             "https://api.bitbucket.org/2.0/repositories/test-workspace/test-repo/pullrequests/456",
-            json=mock_pr,
+            json={
+                'id': 456,
+                'title': 'Large PR',
+                'author': {'display_name': 'Developer'},
+                'state': 'OPEN',
+                'source': {'branch': {'name': 'develop'}},
+                'destination': {'branch': {'name': 'main'}}
+            },
             status=200
         )
+        
+        # Mock large diff response (>10k chars) - need ~1000+ lines
+        large_diff = 'diff --git a/large.py b/large.py\n' + '\n'.join([f'+line {i}' for i in range(1200)])
         responses.add(
             responses.GET,
             "https://api.bitbucket.org/2.0/repositories/test-workspace/test-repo/pullrequests/456/diff",
@@ -429,7 +427,7 @@ class TestGetPRDiff:
         
         result = bitbucket_get_pr_diff(456)
         
-        # Verify truncation occurred
+        # Verify truncation occurred - result should be truncated to ~10k chars of diff + metadata
         assert len(result) <= 11000  # Allow some overhead for metadata + truncation message
         assert '[... truncated ...]' in result or 'truncated' in result.lower()
     

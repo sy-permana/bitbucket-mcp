@@ -245,6 +245,76 @@ def bitbucket_get_pull_request(pr_id: int) -> str:
         )
 
 
+def _build_diff_metadata(pr: dict) -> str:
+    """Build metadata header for PR diff.
+    
+    Args:
+        pr: PR dictionary from Bitbucket API
+        
+    Returns:
+        Formatted metadata header string
+    """
+    pr_id = pr.get('id', 'unknown')
+    title = pr.get('title', 'No title')
+    author = pr.get('author', {}).get('display_name', 'Unknown')
+    state = pr.get('state', 'unknown')
+    source_branch = pr.get('source', {}).get('branch', {}).get('name', 'unknown')
+    target_branch = pr.get('destination', {}).get('branch', {}).get('name', 'unknown')
+    
+    lines = [
+        f"PR #{pr_id}: {title}",
+        f"Author: {author} | State: {state}",
+        f"Branch: {source_branch} → {target_branch}",
+    ]
+    
+    return '\n'.join(lines)
+
+
+@mcp.tool()
+def bitbucket_get_pr_diff(pr_id: int) -> str:
+    """Get PR diff with automatic truncation at 10,000 characters.
+    
+    Args:
+        pr_id: Pull request ID number
+    
+    Returns:
+        Formatted diff with metadata header, truncated if needed
+    """
+    import requests
+    
+    try:
+        # Get PR details for metadata
+        pr = bitbucket_client.get(f'/pullrequests/{pr_id}')
+        
+        # Get diff as text/plain (NOT JSON!)
+        diff_url = f"{bitbucket_client.repo_url}/pullrequests/{pr_id}/diff"
+        diff_response = bitbucket_client.session.get(diff_url, timeout=30)
+        diff_response.raise_for_status()
+        diff_text = diff_response.text
+        
+        # Build metadata header
+        metadata = _build_diff_metadata(pr)
+        
+        # Truncate if needed
+        was_truncated = len(diff_text) > 10000
+        if was_truncated:
+            diff_text = _truncate_diff(diff_text, 10000)
+        
+        # Assemble result
+        result = metadata + "\n\n" + diff_text
+        if was_truncated:
+            result += "\n\n[Note: Diff truncated to 10,000 characters]"
+        
+        return result
+        
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 404:
+            return f"[bitbucket_get_pr_diff] Failed to fetch diff: PR #{pr_id} not found. Verify the PR number."
+        return f"[bitbucket_get_pr_diff] Failed to fetch diff for PR #{pr_id}: HTTP {e.response.status_code}"
+    except Exception as e:
+        return f"[bitbucket_get_pr_diff] Failed to fetch diff for PR #{pr_id}: {str(e)}"
+
+
 if __name__ == "__main__":
     logger.info("Starting Bitbucket PR Manager MCP server...")
     mcp.run(transport="stdio")
