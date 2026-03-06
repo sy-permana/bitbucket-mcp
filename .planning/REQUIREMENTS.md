@@ -71,10 +71,13 @@
 | CONFIG-02 | Phase 1 | Pending |
 | CONFIG-03 | Phase 1 | Pending |
 | CONFIG-04 | Phase 1 | Pending |
+| ERROR-03 | Phase 1 | Pending |
 | READ-01 | Phase 2 | Pending |
 | READ-02 | Phase 2 | Pending |
 | READ-03 | Phase 2 | Pending |
 | READ-04 | Phase 2 | Pending |
+| ERROR-01 | Phase 2 | Pending |
+| ERROR-02 | Phase 2 | Pending |
 | LIFECYCLE-01 | Phase 3 | Pending |
 | LIFECYCLE-02 | Phase 3 | Pending |
 | LIFECYCLE-03 | Phase 3 | Pending |
@@ -82,14 +85,17 @@
 | LIFECYCLE-05 | Phase 3 | Pending |
 | COMMENT-01 | Phase 4 | Pending |
 | COMMENT-02 | Phase 4 | Pending |
-| ERROR-01 | Phase 1-4 | Pending |
-| ERROR-02 | Phase 1-4 | Pending |
-| ERROR-03 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 17 total
 - Mapped to phases: 17
 - Unmapped: 0 ✓
+
+**Phase Distribution:**
+- Phase 1 (Foundation): 5 requirements — CONFIG-01 through CONFIG-04, ERROR-03
+- Phase 2 (Read Operations): 6 requirements — READ-01 through READ-04, ERROR-01, ERROR-02
+- Phase 3 (PR Lifecycle): 5 requirements — LIFECYCLE-01 through LIFECYCLE-05
+- Phase 4 (Commenting): 2 requirements — COMMENT-01, COMMENT-02
 
 ---
 *Requirements defined: 2025-03-06*

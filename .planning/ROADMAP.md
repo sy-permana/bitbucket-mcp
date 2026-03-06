@@ -1,0 +1,112 @@
+# Roadmap: Bitbucket PR Manager MCP Server
+
+## Overview
+
+| Attribute | Value |
+|-----------|-------|
+| **Granularity** | Coarse (3-5 phases) |
+| **Total Phases** | 4 |
+| **v1 Requirements** | 17 mapped |
+| **Coverage** | 100% ✓ |
+
+## Phases
+
+- [ ] **Phase 1: Foundation** - Server initialization, auth, and client layer
+- [ ] **Phase 2: Read Operations** - List PRs, get details, fetch diffs, check status
+- [ ] **Phase 3: PR Lifecycle** - Create, merge, approve, decline, request changes
+- [ ] **Phase 4: Commenting** - General and inline PR comments
+
+---
+
+## Phase Details
+
+### Phase 1: Foundation
+**Goal:** MCP server boots with validated config, authenticated client, and proper logging
+**Depends on:** Nothing (first phase)
+**Requirements:** CONFIG-01, CONFIG-02, CONFIG-03, CONFIG-04, ERROR-03
+**Success Criteria** (what must be TRUE):
+1. Server exits cleanly with clear message if any of 4 required env vars are missing
+2. Server initializes FastMCP with `bitbucket_` namespaced tool registration
+3. Bitbucket API client authenticates successfully with HTTPBasicAuth + API Token
+4. All log output goes to stderr (never stdout)
+5. Server responds to MCP protocol initialization without errors
+**Plans:** TBD
+
+### Phase 2: Read Operations
+**Goal:** Users can query PRs and get contextual information without side effects
+**Depends on:** Phase 1 (requires authenticated client)
+**Requirements:** READ-01, READ-02, READ-03, READ-04, ERROR-01, ERROR-02
+**Success Criteria** (what must be TRUE):
+1. User can list PRs filtered by state (open/merged/declined)
+2. User can get complete details for any PR by ID
+3. User can fetch PR diff truncated at 10,000 characters with "[... truncated ...]" indicator
+4. User can check CI/CD commit status for any commit hash
+5. All tool errors return clear string messages (never JSON objects or tracebacks)
+6. Error messages include context (e.g., "Failed to fetch PR #123: Not found")
+**Plans:** TBD
+
+### Phase 3: PR Lifecycle
+**Goal:** Users can manage complete PR workflows from creation to merge
+**Depends on:** Phase 2 (requires ability to read PRs to verify operations)
+**Requirements:** LIFECYCLE-01, LIFECYCLE-02, LIFECYCLE-03, LIFECYCLE-04, LIFECYCLE-05
+**Success Criteria** (what must be TRUE):
+1. User can create PR with title, description, source branch, target branch
+2. User can merge an open PR (with merge commit or fast-forward options)
+3. User can approve a PR (and approval persists)
+4. User can decline/reject a PR (and state changes to declined)
+5. User can request changes on a PR (via unapprove + comment pattern)
+**Plans:** TBD
+
+### Phase 4: Commenting
+**Goal:** Users can provide feedback on PRs via general and inline comments
+**Depends on:** Phase 3 (requires existing PRs to comment on and diff understanding)
+**Requirements:** COMMENT-01, COMMENT-02
+**Success Criteria** (what must be TRUE):
+1. User can add a general comment that appears in PR discussion
+2. User can add an inline comment to a specific line with correct `to`/`from` mapping
+3. Inline comments work for added, modified, and deleted lines
+4. Comment errors include context about which PR and line failed
+**Plans:** TBD
+
+---
+
+## Progress
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 1. Foundation | 0/2 | Not started | - |
+| 2. Read Operations | 0/2 | Not started | - |
+| 3. PR Lifecycle | 0/2 | Not started | - |
+| 4. Commenting | 0/2 | Not started | - |
+
+---
+
+## Dependencies
+
+```
+Phase 1 (Foundation)
+    ↓
+Phase 2 (Read Operations) — validates client layer
+    ↓
+Phase 3 (PR Lifecycle) — requires working reads for verification
+    ↓
+Phase 4 (Commenting) — requires PRs exist, diff understanding from Phase 2
+```
+
+---
+
+## Coverage Summary
+
+| Category | Requirements | Phase |
+|----------|--------------|-------|
+| Foundation (CONFIG) | 4 | Phase 1 |
+| Error Infrastructure (ERROR) | 3 | Phase 1 (ERROR-03), Phase 2 (ERROR-01, ERROR-02) |
+| Read Operations (READ) | 4 | Phase 2 |
+| PR Lifecycle (LIFECYCLE) | 5 | Phase 3 |
+| Commenting (COMMENT) | 2 | Phase 4 |
+| **Total** | **17** | **100% mapped** ✓ |
+
+---
+
+*Roadmap created: 2025-03-06*
+*Granularity: Coarse (4 phases)*
