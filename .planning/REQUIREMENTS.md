@@ -14,8 +14,8 @@
 
 ### Read Operations (READ)
 
-- [ ] **READ-01**: User can list pull requests with optional state filter (open/merged/declined)
-- [ ] **READ-02**: User can get detailed information about a specific pull request by ID
+- [x] **READ-01**: User can list pull requests with optional state filter (open/merged/declined)
+- [x] **READ-02**: User can get detailed information about a specific pull request by ID
 - [x] **READ-03**: User can fetch PR diff with automatic truncation at 10,000 characters
 - [ ] **READ-04**: User can check CI/CD commit status for a given commit hash
 
@@ -72,8 +72,8 @@
 | CONFIG-03 | Phase 1 | Complete |
 | CONFIG-04 | Phase 1 | Complete |
 | ERROR-03 | Phase 1 | Complete |
-| READ-01 | Phase 2 | Pending |
-| READ-02 | Phase 2 | Pending |
+| READ-01 | Phase 2 | Complete |
+| READ-02 | Phase 2 | Complete |
 | READ-03 | Phase 2 | Complete |
 | READ-04 | Phase 2 | Pending |
 | ERROR-01 | Phase 2 | Complete |
