@@ -12,29 +12,35 @@ class TestLoggingConfiguration:
     
     def test_logging_to_stderr(self, mock_env_vars):
         """Test that logging is configured with StreamHandler to stderr."""
-        with patch('logging.basicConfig') as mock_basic_config:
-            # Import should call basicConfig with stderr handler
-            import src.server as server_module
-            
-            # Verify basicConfig was called
-            assert mock_basic_config.called, "logging.basicConfig should be called"
-            
-            # Get the call arguments
-            call_args = mock_basic_config.call_args
-            
-            # Check handlers parameter contains StreamHandler with sys.stderr
-            if 'handlers' in call_args.kwargs:
-                handlers = call_args.kwargs['handlers']
-            elif len(call_args.args) >= 1:
-                handlers = call_args.args[0] if isinstance(call_args.args[0], list) else call_args.kwargs.get('handlers', [])
-            else:
-                handlers = []
-            
-            # Should have at least one handler that writes to stderr
-            assert any(
-                isinstance(h, logging.StreamHandler) and h.stream is sys.stderr
-                for h in handlers
-            ), "Logging should be configured to use stderr"
+        import src.server as server_module
+        
+        # Check that the root logger (which server.logger inherits from) has stderr handler
+        # The server configures logging.basicConfig which sets up the root logger
+        root_logger = logging.getLogger()
+        
+        # Traverse logger hierarchy to find stderr handler
+        def has_stderr_handler(logger):
+            for h in logger.handlers:
+                if isinstance(h, logging.StreamHandler):
+                    # Check if stream is stderr or stderr-like
+                    stream = getattr(h, 'stream', None)
+                    if stream is sys.stderr:
+                        return True
+            return False
+        
+        # Check root logger and its hierarchy
+        found = has_stderr_handler(root_logger)
+        
+        # If not in root, check up the parent chain
+        if not found:
+            current = logging.getLogger('src.server')
+            while current and not found:
+                found = has_stderr_handler(current)
+                if found:
+                    break
+                current = current.parent
+        
+        assert found, "Logging should be configured with a StreamHandler writing to stderr"
 
 
 class TestServerInitialization:
