@@ -13,7 +13,7 @@
 
 - [x] **Phase 1: Foundation** - Server initialization, auth, and client layer (completed 2026-03-06)
 - [x] **Phase 2: Read Operations** - List PRs, get details, fetch diffs, check status (completed 2026-03-06)
-- [~] **Phase 3: PR Lifecycle** - Create, merge, approve, decline, request changes (in progress)
+- [x] **Phase 3: PR Lifecycle** - Create, merge, approve, decline, request changes (completed 2026-03-07)
 - [ ] **Phase 4: Commenting** - General and inline PR comments
 
 ---
@@ -72,7 +72,7 @@ Plan List:
 Plan List:
 - [x] 03-01-PLAN.md — Test Scaffold for PR Lifecycle Operations
 - [x] 03-02-PLAN.md — Create PR Tool (LIFECYCLE-01)
-- [ ] 03-03-PLAN.md — State Transition Tools (merge, approve, decline, request changes)
+- [x] 03-03-PLAN.md — State Transition Tools (merge, approve, decline, request changes)
 
 ### Phase 4: Commenting
 **Goal:** Users can provide feedback on PRs via general and inline comments
@@ -93,7 +93,7 @@ Plan List:
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete    | 2026-03-06 |
 | 2. Read Operations | 3/3 | Complete    | 2026-03-06 |
-| 3. PR Lifecycle | 2/3 | In Progress | 2026-03-06 |
+| 3. PR Lifecycle | 3/3 | Complete    | 2026-03-07 |
 | 4. Commenting | 0/2 | Not started | - |
 
 ---

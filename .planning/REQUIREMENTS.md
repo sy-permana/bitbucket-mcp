@@ -22,10 +22,10 @@
 ### PR Lifecycle (LIFECYCLE)
 
 - [x] **LIFECYCLE-01**: User can create a new pull request with title, description, source branch, and target branch
-- [ ] **LIFECYCLE-02**: User can merge an open pull request
-- [ ] **LIFECYCLE-03**: User can approve a pull request
-- [ ] **LIFECYCLE-04**: User can decline/reject a pull request
-- [ ] **LIFECYCLE-05**: User can request changes on a pull request (via comment pattern)
+- [x] **LIFECYCLE-02**: User can merge an open pull request
+- [x] **LIFECYCLE-03**: User can approve a pull request
+- [x] **LIFECYCLE-04**: User can decline/reject a pull request
+- [x] **LIFECYCLE-05**: User can request changes on a pull request (via comment pattern)
 
 ### Commenting (COMMENT)
 
@@ -79,10 +79,10 @@
 | ERROR-01 | Phase 2 | Complete |
 | ERROR-02 | Phase 2 | Complete |
 | LIFECYCLE-01 | Phase 3 | Complete |
-| LIFECYCLE-02 | Phase 3 | Pending |
-| LIFECYCLE-03 | Phase 3 | Pending |
-| LIFECYCLE-04 | Phase 3 | Pending |
-| LIFECYCLE-05 | Phase 3 | Pending |
+| LIFECYCLE-02 | Phase 3 | Complete |
+| LIFECYCLE-03 | Phase 3 | Complete |
+| LIFECYCLE-04 | Phase 3 | Complete |
+| LIFECYCLE-05 | Phase 3 | Complete |
 | COMMENT-01 | Phase 4 | Pending |
 | COMMENT-02 | Phase 4 | Pending |
 
