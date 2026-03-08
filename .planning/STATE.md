@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-07T04:36:07.251Z"
+last_updated: "2026-03-08T05:15:41.776Z"
 progress:
   total_phases: 4
-  completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  completed_phases: 4
+  total_plans: 10
+  completed_plans: 10
 ---
 
 # STATE: Bitbucket PR Manager MCP Server
@@ -26,15 +26,15 @@ progress:
 
 | Attribute | Value |
 |-----------|-------|
-| **Phase** | 03-pr-lifecycle |
-| **Plan** | 03 |
-| **Status** | Complete - State Transition Tools (merge, approve, decline, request changes) |
-| **Next Plan** | Phase 4: Commenting |
+| **Phase** | 04-commenting |
+| **Plan** | 01 |
+| **Status** | Complete - Commenting Tools (general and inline comments) |
+| **Next Plan** | Phase complete - Ready for milestone completion |
 
 ### Progress
 
 ```
-ROADMAP IN PROGRESS [██████████] 100% (Phase 3 Complete)
+ROADMAP IN PROGRESS [██████████] 100% (Phase 4 Complete)
   Phase 1: Foundation ──────────── [3/3] Complete
     Plan 01: Configuration ─────── Complete
     Plan 02: Bitbucket Client ──── Complete
@@ -47,7 +47,8 @@ ROADMAP IN PROGRESS [██████████] 100% (Phase 3 Complete)
     Plan 01: Test Infrastructure ─ Complete (TDD RED phase)
     Plan 02: Create PR Tool ─────── Complete
     Plan 03: Merge/Approve/Decline ─ Complete
-  Phase 4: Commenting ──────────── Not started
+  Phase 4: Commenting ──────────── [1/1] Complete
+    Plan 01: Commenting Tools ──── Complete
 ```
 
 ## Accumulated Context
@@ -72,6 +73,7 @@ ROADMAP IN PROGRESS [██████████] 100% (Phase 3 Complete)
 - [Phase 02-read-operations]: Used dict context for error formatting instead of string — Dict context provides key=value pairs for flexible error message construction, enabling richer context in error messages
 - [Phase 02-read-operations]: State indicators use Unicode symbols for CI/CD status — Unicode symbols (✓ ✗ ○ −) provide quick visual scanning in LLM context windows and are universally recognized
 - [Phase 03-pr-lifecycle]: Tiered response format balances information density — Create operations need URL for viewing; approve/decline are quick actions with simple confirmation
+- [Phase 04-commenting]: Two separate tools for general vs inline comments — Separate tools make LLM tool discovery clearer and parameter requirements obvious per CONTEXT.md decision
 
 ### Todos
 
@@ -84,7 +86,7 @@ ROADMAP IN PROGRESS [██████████] 100% (Phase 3 Complete)
 - [x] Plan 03-01: Test Infrastructure (Complete - 26 test cases, TDD RED phase)
 - [x] Plan 03-02: Create PR Tool (Complete)
 - [x] Plan 03-03: Merge/Approve/Decline Tools (Complete)
-- [ ] Plan Phase 4: Commenting (Next)
+- [x] Plan 04-01: Commenting Tools (Complete)
 
 ### Blockers
 
@@ -92,9 +94,9 @@ None
 
 ## Session Continuity
 
-**Last Action:** Completed Plan 03-03: State Transition Tools (merge, approve, decline, request changes)
-**Next Action:** Begin Phase 4: Commenting (general and inline PR comments)
-**Context Valid:** Yes — All PR lifecycle tools complete
+**Last Action:** Completed Plan 04-01: Commenting Tools (bitbucket_add_comment, bitbucket_add_inline_comment)
+**Next Action:** Phase 4 complete - Ready for milestone completion
+**Context Valid:** Yes — All phases complete: Foundation → Read → Lifecycle → Commenting
 
 ## Key Constraints (From PROJECT.md)
 
@@ -124,4 +126,5 @@ None
 *Plan 03-02 completed*
 | Phase 03-pr-lifecycle P01 | 10min | 1 tasks | 1 files |
 | Phase 03-pr-lifecycle P03 | 2min | 4 tasks | 1 files |
+| Phase 04-commenting P01 | 10min | 3 tasks | 2 files |
 

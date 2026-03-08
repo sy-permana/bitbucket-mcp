@@ -29,8 +29,8 @@
 
 ### Commenting (COMMENT)
 
-- [ ] **COMMENT-01**: User can add a general comment to a pull request
-- [ ] **COMMENT-02**: User can add an inline comment to a specific line in a pull request diff
+- [x] **COMMENT-01**: User can add a general comment to a pull request
+- [x] **COMMENT-02**: User can add an inline comment to a specific line in a pull request diff
 
 ### Error Handling (ERROR)
 
@@ -83,8 +83,8 @@
 | LIFECYCLE-03 | Phase 3 | Complete |
 | LIFECYCLE-04 | Phase 3 | Complete |
 | LIFECYCLE-05 | Phase 3 | Complete |
-| COMMENT-01 | Phase 4 | Pending |
-| COMMENT-02 | Phase 4 | Pending |
+| COMMENT-01 | Phase 4 | Complete |
+| COMMENT-02 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 17 total
