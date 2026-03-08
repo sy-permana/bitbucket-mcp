@@ -83,7 +83,11 @@ Plan List:
 2. User can add an inline comment to a specific line with correct `to`/`from` mapping
 3. Inline comments work for added, modified, and deleted lines
 4. Comment errors include context about which PR and line failed
-**Plans:** TBD
+**Plans:** 1 plan created
+- Wave 1: 04-01 (test scaffold + both commenting tools)
+
+Plan List:
+- [ ] 04-01-PLAN.md — General and Inline Commenting Tools (COMMENT-01, COMMENT-02)
 
 ---
 
@@ -94,7 +98,7 @@ Plan List:
 | 1. Foundation | 3/3 | Complete    | 2026-03-06 |
 | 2. Read Operations | 3/3 | Complete    | 2026-03-06 |
 | 3. PR Lifecycle | 3/3 | Complete    | 2026-03-07 |
-| 4. Commenting | 0/2 | Not started | - |
+| 4. Commenting | 0/1 | Planned | - |
 
 ---
 
