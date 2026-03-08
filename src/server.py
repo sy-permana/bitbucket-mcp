@@ -652,6 +652,31 @@ def bitbucket_request_changes(pr_id: int, comment: str | None = None) -> str:
         )
 
 
+@mcp.tool()
+def bitbucket_add_comment(pr_id: int, content: str) -> str:
+    """Add a general comment to a pull request.
+    
+    Args:
+        pr_id: Pull request ID number
+        content: Comment text (markdown supported)
+    
+    Returns:
+        Confirmation message or error
+    """
+    # Validate non-empty (per CONTEXT.md decision)
+    if not content or not content.strip():
+        return "[bitbucket_add_comment] Failed to add comment: Comment content cannot be empty."
+    
+    try:
+        bitbucket_client.post(
+            f'/pullrequests/{pr_id}/comments',
+            data={'content': {'raw': content}}
+        )
+        return f"Comment added to PR #{pr_id}"
+    except Exception as e:
+        return _format_error("bitbucket_add_comment", f"add comment to PR #{pr_id}", e)
+
+
 if __name__ == "__main__":
     logger.info("Starting Bitbucket PR Manager MCP server...")
     mcp.run(transport="stdio")
