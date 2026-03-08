@@ -53,23 +53,28 @@ def mock_diff_response():
     
     Shows:
     - File src/main.py
-    - Hunk starting at old line 10, new line 10
-    - Deleted line at old line 14 (shows as '-old code')
-    - Added line at new line 14 (shows as '+new code')  
-    - Context lines 10-13 and 15-16
+    - Hunk: old lines 1-5, new lines 1-6 (one line added)
+    - Deleted line at old line 3 (shows as '-deleted line') - maps to 'from': 3
+    - Added line at new line 4 (shows as '+extra line') - maps to 'to': 4
+    - Context lines 1-2, 5-6 (exist in both)
+    
+    Line mappings:
+    - Line 3: deleted only (old file) -> uses 'from'
+    - Line 4: added only (new file) -> uses 'to'
+    - Line 5: context -> uses 'to'
     """
     return '''diff --git a/src/main.py b/src/main.py
 index abc123..def456 100644
 --- a/src/main.py
 +++ b/src/main.py
-@@ -10,7 +10,7 @@ def process_data(data):
-     result = []
-     for item in data:
-         if item > 0:
--            old code here
-+            new code here
-             result.append(item)
-     return result
+@@ -1,5 +1,6 @@
+ line 1
+ line 2
+-deleted line
+ line 3
++extra line
+ line 4
+ line 5
 '''
 
 
@@ -182,7 +187,7 @@ class TestInlineComment:
         result = bitbucket_add_inline_comment(
             pr_id=123,
             file_path="src/main.py",
-            line=14,
+            line=4,  # Added line (+extra line)
             content="Good addition!"
         )
 
@@ -191,7 +196,7 @@ class TestInlineComment:
         # Should contain success indicator
         assert "Comment added to PR #123" in result
         # Verify 'to' field was used (added line)
-        assert posted_data['body']['inline']['to'] == 14
+        assert posted_data['body']['inline']['to'] == 4
         assert 'from' not in posted_data['body']['inline'] or posted_data['body']['inline']['from'] is None
 
     @responses.activate
@@ -225,7 +230,7 @@ class TestInlineComment:
         result = bitbucket_add_inline_comment(
             pr_id=123,
             file_path="src/main.py",
-            line=14,
+            line=3,  # Deleted line (-deleted line)
             content="Why was this removed?"
         )
 
@@ -234,7 +239,7 @@ class TestInlineComment:
         # Should contain success indicator
         assert "Comment added to PR #123" in result
         # Verify 'from' field was used (deleted line - old file line number)
-        assert posted_data['body']['inline']['from'] == 14
+        assert posted_data['body']['inline']['from'] == 3
         assert 'to' not in posted_data['body']['inline'] or posted_data['body']['inline']['to'] is None
 
     @responses.activate
@@ -268,8 +273,8 @@ class TestInlineComment:
         result = bitbucket_add_inline_comment(
             pr_id=123,
             file_path="src/main.py",
-            line=11,  # Context line: "    result = []"
-            content="This could be a set for O(1) lookup"
+            line=5,  # Context line: "line 4"
+            content="This could be a constant"
         )
 
         # Should be a string
@@ -277,7 +282,7 @@ class TestInlineComment:
         # Should contain success indicator
         assert "Comment added to PR #123" in result
         # Verify 'to' field was used (context line)
-        assert posted_data['body']['inline']['to'] == 11
+        assert posted_data['body']['inline']['to'] == 5
 
     @responses.activate
     def test_inline_file_not_found(self, mock_env_vars, mock_diff_response):

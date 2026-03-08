@@ -677,6 +677,149 @@ def bitbucket_add_comment(pr_id: int, content: str) -> str:
         return _format_error("bitbucket_add_comment", f"add comment to PR #{pr_id}", e)
 
 
+def _parse_diff_for_line(diff_text: str, target_path: str, target_line: int) -> dict | None:
+    """Parse diff to find line type and correct to/from mapping.
+    
+    Args:
+        diff_text: Raw diff text from PR
+        target_path: File path to find
+        target_line: Line number user wants to comment on
+        
+    Returns:
+        dict with 'path', 'to', 'from' keys or None if not found
+    """
+    import re
+    
+    current_file = None
+    old_line = 0
+    new_line = 0
+    in_target_file = False
+    file_found = False
+    
+    for line in diff_text.split('\n'):
+        # File header: diff --git a/path/to/file b/path/to/file
+        if line.startswith('diff --git '):
+            parts = line.split(' ')
+            if len(parts) >= 4:
+                # Extract path from "b/path/to/file"
+                current_file = parts[3][2:] if parts[3].startswith('b/') else parts[3]
+                in_target_file = (current_file == target_path)
+                if in_target_file:
+                    file_found = True
+                old_line = 0
+                new_line = 0
+            continue
+            
+        if not in_target_file:
+            continue
+            
+        # Hunk header: @@ -old_start,old_count +new_start,new_count @@
+        if line.startswith('@@'):
+            match = re.match(r'@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@', line)
+            if match:
+                old_line = int(match.group(1)) - 1  # -1 because we increment before checking
+                new_line = int(match.group(2)) - 1
+            continue
+        
+        # Skip non-content lines (file mode, index, etc)
+        if line.startswith('---') or line.startswith('+++') or line.startswith('index '):
+            continue
+        
+        # Content lines
+        if line.startswith('-'):
+            old_line += 1
+            # For deleted lines, user provides the old file line number
+            if old_line == target_line:
+                return {'path': target_path, 'from': old_line, 'to': None}
+        elif line.startswith('+'):
+            new_line += 1
+            if new_line == target_line:
+                return {'path': target_path, 'from': None, 'to': new_line}
+        elif line.startswith(' ') or (line == '' and in_target_file):
+            old_line += 1
+            new_line += 1
+            if new_line == target_line:
+                return {'path': target_path, 'from': None, 'to': new_line}
+    
+    # Check if file was found at all
+    if not file_found:
+        return {'path': None, 'error': 'file_not_found'}
+    
+    return None  # Line not found
+
+
+@mcp.tool()
+def bitbucket_add_inline_comment(
+    pr_id: int,
+    file_path: str,
+    line: int,
+    content: str
+) -> str:
+    """Add an inline comment to a specific line in a pull request diff.
+    
+    Args:
+        pr_id: Pull request ID number
+        file_path: Path to the file (e.g., "src/main.py")
+        line: Line number to comment on
+        content: Comment text (markdown supported)
+    
+    Returns:
+        Confirmation message or error
+    """
+    # Validate non-empty
+    if not content or not content.strip():
+        return (
+            f"[bitbucket_add_inline_comment] Failed to add comment to {file_path} line {line}: "
+            "Comment content cannot be empty."
+        )
+    
+    try:
+        # Get diff to determine line type
+        diff_url = f"{bitbucket_client.repo_url}/pullrequests/{pr_id}/diff"
+        diff_response = bitbucket_client.session.get(diff_url, timeout=30)
+        diff_response.raise_for_status()
+        diff_text = diff_response.text
+        
+        # Parse diff to get line mapping
+        result = _parse_diff_for_line(diff_text, file_path, line)
+        
+        if result is None:
+            return (
+                f"[bitbucket_add_inline_comment] Failed to add comment to {file_path} line {line}: "
+                "Line not found in diff."
+            )
+        
+        if result.get('error') == 'file_not_found':
+            return (
+                f"[bitbucket_add_inline_comment] Failed to add comment: "
+                f"File {file_path} not found in PR diff."
+            )
+        
+        # Build inline object (only include non-None values)
+        inline_obj = {'path': result['path']}
+        if result.get('to') is not None:
+            inline_obj['to'] = result['to']
+        if result.get('from') is not None:
+            inline_obj['from'] = result['from']
+        
+        bitbucket_client.post(
+            f'/pullrequests/{pr_id}/comments',
+            data={
+                'content': {'raw': content},
+                'inline': inline_obj
+            }
+        )
+        return f"Comment added to PR #{pr_id}"
+        
+    except Exception as e:
+        return _format_error(
+            "bitbucket_add_inline_comment",
+            f"add comment to {file_path} line {line}",
+            e,
+            {'pr_id': pr_id, 'file': file_path, 'line': line}
+        )
+
+
 if __name__ == "__main__":
     logger.info("Starting Bitbucket PR Manager MCP server...")
     mcp.run(transport="stdio")
