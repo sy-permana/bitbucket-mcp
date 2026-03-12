@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "bitbucket-pr-manager-mcp"
 version = "0.1.0"
@@ -8,6 +12,9 @@ dependencies = [
     "requests>=2.32.5",
     "pydantic>=2.12.5",
 ]
+
+[project.scripts]
+bitbucket-pr-manager-mcp = "src.server:main"
 
 [project.optional-dependencies]
 dev = [
