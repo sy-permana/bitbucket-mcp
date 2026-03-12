@@ -531,7 +531,6 @@ def bitbucket_merge_pr(
         pr_title = pr.get("title", "No title")
 
         data = {
-            "type": "string",
             "merge_strategy": strategy,
             "close_source_branch": close_source_branch,
         }
@@ -828,6 +827,11 @@ def bitbucket_add_inline_comment(
         )
 
 
-if __name__ == "__main__":
+def main():
+    """Entry point for the Bitbucket PR Manager MCP server."""
     logger.info("Starting Bitbucket PR Manager MCP server...")
     mcp.run(transport="stdio")
+
+
+if __name__ == "__main__":
+    main()
