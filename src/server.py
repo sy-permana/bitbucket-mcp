@@ -276,8 +276,7 @@ def bitbucket_get_pull_request(pr_id: int) -> str:
         Formatted PR details or error message
     """
     try:
-        pr_id_int = int(pr_id)
-        response = bitbucket_client.get(f"/pullrequests/{pr_id_int}")
+        response = bitbucket_client.get(f"/pullrequests/{pr_id}")
         return _format_pr_detail(response)
 
     except Exception as e:
