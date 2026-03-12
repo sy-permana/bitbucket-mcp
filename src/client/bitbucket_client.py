@@ -85,6 +85,8 @@ class BitbucketClient:
             url, json=data, timeout=self.config.request_timeout, **kwargs
         )
         response.raise_for_status()
+        if response.status_code == 204 or not response.content:
+            return {}
         return response.json()
 
     def test_authentication(self) -> bool:
