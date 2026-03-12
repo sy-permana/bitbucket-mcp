@@ -71,3 +71,11 @@ Thumbs.db
 
 # MCP
 .mcp/
+
+# IDE/Config files
+.agent/
+.agents/
+.claude/
+.ignore
+skills-lock.json
+opencode.jsonc
